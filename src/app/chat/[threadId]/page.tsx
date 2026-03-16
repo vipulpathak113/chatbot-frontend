@@ -4,11 +4,12 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import ChatInput from "@/components/ChatInput";
 import ChatMessages from "@/components/ChatMessages";
+import { Message } from "@/types";
 
 export default function ChatPage() {
   const { threadId } = useParams();
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
     useEffect(() => {
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Message, ChatInputProps } from "@/types";
 
-export default function ChatInput({ threadId, setMessages }: any) {
+export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
 
   const [input, setInput] = useState("");
 
@@ -10,12 +11,12 @@ export default function ChatInput({ threadId, setMessages }: any) {
 
     if (!input.trim()) return;
 
-    const userMessage = {
+    const userMessage: Message = {
       role: "user",
       content: input,
     };
 
-    setMessages((prev: any) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
 
     const response = await fetch("http://localhost:8000/chat", {
       method: "POST",
@@ -31,16 +32,18 @@ export default function ChatInput({ threadId, setMessages }: any) {
     const reader = response.body?.getReader();
     const decoder = new TextDecoder();
 
-    let assistantMessage = {
+    const assistantMessage: Message = {
       role: "assistant",
       content: "",
     };
 
-    setMessages((prev: any) => [...prev, assistantMessage]);
+    setMessages((prev) => [...prev, assistantMessage]);
+
+    if (!reader) return;
 
     while (true) {
 
-      const { done, value } = await reader!.read();
+      const { done, value } = await reader.read();
 
       if (done) break;
 
@@ -52,19 +55,26 @@ export default function ChatInput({ threadId, setMessages }: any) {
 
         if (!line.startsWith("data:")) continue;
 
-        const data = JSON.parse(line.replace("data:", "").trim());
+        try {
+          const data = JSON.parse(line.replace("data:", "").trim()) as {
+            type: string;
+            content: string;
+          };
 
-        if (data.type === "assistant") {
+          if (data.type === "assistant") {
 
-          assistantMessage.content += data.content;
+            assistantMessage.content += data.content;
 
-          setMessages((prev: any) => {
+            setMessages((prev) => {
 
-            const updated = [...prev];
-            updated[updated.length - 1] = assistantMessage;
+              const updated = [...prev];
+              updated[updated.length - 1] = assistantMessage;
 
-            return updated;
-          });
+              return updated;
+            });
+          }
+        } catch (e) {
+          console.error("Error parsing message:", e);
         }
       }
     }
@@ -77,6 +87,7 @@ export default function ChatInput({ threadId, setMessages }: any) {
 
       <input
         className="flex-1 border p-3 rounded"
+        placeholder="Type your message..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
