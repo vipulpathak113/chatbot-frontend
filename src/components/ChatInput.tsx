@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Message, ChatInputProps } from "@/types";
+import { streamChat } from "@/services/chatService";
 
 export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
 
@@ -18,18 +19,9 @@ export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
 
     setMessages((prev) => [...prev, userMessage]);
 
-    const response = await fetch("http://localhost:8000/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        thread_id: threadId,
-        message: input,
-      }),
-    });
+    const response = await streamChat(threadId, input);
 
-    const reader = response.body?.getReader();
+    const reader = response?.getReader();
     const decoder = new TextDecoder();
 
     const assistantMessage: Message = {
