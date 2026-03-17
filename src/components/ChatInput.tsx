@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { Message, ChatInputProps } from "@/types";
 import { streamChat } from "@/services/chatService";
+import { useThreadStore } from "@/store/threadStore";
+
 
 export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
 
   const [input, setInput] = useState("");
+  const fetchThreads = useThreadStore((state) => state.fetchThreads);
 
   const sendMessage = async () => {
 
@@ -72,6 +75,7 @@ export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
     }
 
     setInput("");
+    await fetchThreads();
   };
 
   return (

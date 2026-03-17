@@ -1,25 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getThreads } from "@/services/threadService";
+import { useThreadStore } from "@/store/threadStore";
+import { Thread } from "@/types/thread";
 
 export default function Sidebar() {
+  const { threads, fetchThreads } = useThreadStore();
 
-  const [threads, setThreads] = useState([]);
   const router = useRouter();
   const params = useParams();
 
-  const activeId = params?.threadId;
+  const activeId = params?.threadId as string;
 
-const fetchThreads = async () => {
-  const data = await getThreads();
-  setThreads(data);
-};
-
-    useEffect(() => {
+  useEffect(() => {
     fetchThreads();
-  }, []);
+  }, [fetchThreads]);
 
   const handleNewChat = () => {
     const id = crypto.randomUUID();
@@ -28,7 +24,6 @@ const fetchThreads = async () => {
 
   return (
     <div className="w-64 bg-gray-900 text-white h-screen p-4">
-
       <button
         onClick={handleNewChat}
         className="w-full mb-4 bg-gray-700 p-2 rounded"
@@ -37,7 +32,7 @@ const fetchThreads = async () => {
       </button>
 
       <div className="space-y-2">
-        {threads.map((t: any) => (
+        {threads.map((t: Thread) => (
           <div
             key={t.id}
             onClick={() => router.push(`/chat/${t.id}`)}
@@ -49,7 +44,6 @@ const fetchThreads = async () => {
           </div>
         ))}
       </div>
-
     </div>
   );
 }
