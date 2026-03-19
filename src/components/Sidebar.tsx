@@ -66,7 +66,7 @@ export default function Sidebar() {
       <div className="w-64 bg-gray-900 text-white h-screen p-4">
         <button
           onClick={handleNewChat}
-          className="w-full mb-4 bg-gray-700 p-2 rounded"
+          className="w-full mb-4 bg-gray-700 p-2 rounded cursor-pointer"
         >
           + New Chat
         </button>
@@ -89,7 +89,7 @@ export default function Sidebar() {
                   e.stopPropagation();
                   setDeleteId(t.id); // open dialog
                 }}
-                className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600"
+                className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 cursor-pointer"
               >
                 🗑
               </button>

@@ -86,11 +86,17 @@ export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
         placeholder="Type your message..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        }}
       />
 
       <button
         onClick={sendMessage}
-        className="bg-black text-white px-5 py-3 rounded"
+        className="bg-black text-white px-5 py-3 rounded cursor-pointer"
       >
         Send
       </button>
