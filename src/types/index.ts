@@ -1,6 +1,10 @@
 export interface Message {
+  id: string; 
   role: "user" | "assistant";
   content: string;
+  tools?: string[];
+  isThinking?: boolean;
+  isStreaming?: boolean;
 }
 
 export interface ChatInputProps {

@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { Message } from "@/types";
 import remarkGfm from "remark-gfm";
 
-export default function MessageRender({ role, content }: Message) {
+export default function MessageRender({ id, role, content }: Message) {
   return (
     <div
       className={`p-3 rounded max-w-2xl ${

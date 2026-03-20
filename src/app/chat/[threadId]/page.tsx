@@ -11,33 +11,31 @@ export default function ChatPage() {
 
   const [messages, setMessages] = useState<Message[]>([]);
 
-    useEffect(() => {
-
+  useEffect(() => {
     const loadHistory = async () => {
-
       const res = await fetch(
-        `http://localhost:8000/threads/${threadId}/messages`
+        `http://localhost:8000/threads/${threadId}/messages`,
       );
 
       const data = await res.json();
 
-      setMessages(data);
+      setMessages(
+        data.map((m: Message) => ({
+          id: m.id || crypto.randomUUID(),
+          role: m.role,
+          content: m.content,
+        })),
+      );
     };
 
     loadHistory();
-
   }, [threadId]);
 
   return (
     <div className="flex flex-col h-screen">
-
       <ChatMessages messages={messages} />
 
-      <ChatInput
-        threadId={threadId as string}
-        setMessages={setMessages}
-      />
-
+      <ChatInput threadId={threadId as string} setMessages={setMessages} />
     </div>
   );
 }
