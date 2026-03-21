@@ -35,7 +35,7 @@ export default function ChatPage() {
     <div className="flex flex-col h-screen">
       <ChatMessages messages={messages} />
 
-      <ChatInput threadId={threadId as string} setMessages={setMessages} />
+      <ChatInput threadId={threadId as string} setMessages={setMessages} messages={messages} />
     </div>
   );
 }

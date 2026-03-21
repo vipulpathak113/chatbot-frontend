@@ -10,6 +10,7 @@ export interface Message {
 export interface ChatInputProps {
   threadId: string;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  messages: Message[];
 }
 
 export interface ChatMessagesProps {

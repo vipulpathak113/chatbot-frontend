@@ -5,12 +5,17 @@ import { Message, ChatInputProps } from "@/types";
 import { streamChat } from "@/services/chatService";
 import { useThreadStore } from "@/store/threadStore";
 
-export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
+export default function ChatInput({
+  threadId,
+  setMessages,
+  messages,
+}: ChatInputProps) {
   const [input, setInput] = useState("");
   const fetchThreads = useThreadStore((state) => state.fetchThreads);
+  const isStreaming = messages.some((m) => m.isStreaming);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isStreaming) return;
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
@@ -123,13 +128,14 @@ export default function ChatInput({ threadId, setMessages }: ChatInputProps) {
             sendMessage();
           }
         }}
+        disabled={isStreaming}
       />
 
       <button
-        onClick={sendMessage}
-        className="bg-black text-white px-5 py-3 rounded cursor-pointer"
+        disabled={isStreaming}
+        className="bg-black text-white px-5 py-3 rounded cursor-pointer disabled:opacity-50"
       >
-        Send
+        {isStreaming ? "..." : "Send"}
       </button>
     </div>
   );
